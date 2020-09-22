@@ -1,4 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTwitterSquare } from '@fortawesome/free-brands-svg-icons';
+import { faQuoteLeft, faQuoteRight } from '@fortawesome/free-solid-svg-icons';
+
+const ICON_TWITTER = <FontAwesomeIcon icon={faTwitterSquare} className=" hover:bg-gray-700" />;
+const ICON_QUOTE_LEFT = <FontAwesomeIcon icon={faQuoteLeft} />;
+const ICON_QUOTE_RIGHT = <FontAwesomeIcon icon={faQuoteRight} />;
+
 
 export default function GetQuotes() {
     const [quotes, setQuotes] = useState([]);
@@ -11,7 +19,10 @@ export default function GetQuotes() {
         async function getQuotes() {
             let response = await fetch('https://type.fit/api/quotes');
             let data = await response.json();
+            const INDEX = Math.ceil(Math.random() * 1000);
             setQuotes(data);
+            setQuote(data[INDEX].text);
+            setAuthor(data[INDEX].author === null ? 'Anonimous' : data[INDEX].author);
         }
 
         getQuotes();
@@ -24,12 +35,13 @@ export default function GetQuotes() {
     }
 
     return (
-        <div className="App h-screen bg-blue-400 flex items-center justify-center">
-            <div className="w-full md:w-8/12 lg:w-6/12 h-80 rounded overflow-hidden bg-gray-100 shadow-lg">
-                <h1 className="h-56 bg-gray-300 m-0">{quote}</h1>
-                <p className="h-12 bg-green-300 m-0 p-0 text-right pr-4 justify-center">{author}</p>
-                <div className="h-12 bg-yellow-300 m-0 flex items-center">
-                    <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={handleOnClick}>New quote</button>
+        <div className="App h-screen bg-blue-400 flex items-center justify-center" id="quote-box">
+            <div className="w-full md:w-8/12 lg:w-6/12 min-h-96 rounded overflow-hidden bg-gray-100 shadow-lg">
+                <h1 className="text-2xl md:text-5xl text-center font-bold mb-3" id="text">{ICON_QUOTE_LEFT}{quote}{ICON_QUOTE_RIGHT}</h1>
+                <p className="text-right pr-5 justify-center text-xl md:text-3xl" id="author">{author}</p>
+                <div className="flex items-center justify-between px-5">
+                    <a href="http://twitter.com/intent/tweet" target="_blank" rel="noopener noreferrer" id="tweet-quote" className="text-5xl text-gray-500">{ICON_TWITTER}</a>
+                    <button className="bg-gray-300 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={handleOnClick} id="new-quote">New quote</button>
                 </div>
             </div>
         </div>
